@@ -30,15 +30,16 @@ jobs:
             outputs:
               ci:
                 type: postgres
-                host: ${{ secrets.DBT_HOST }}
-                user: ${{ secrets.DBT_USER }}
-                password: ${{ secrets.DBT_PASSWORD }}
+                host: ep-blue-sound-a1gig6fk-pooler.ap-southeast-1.aws.neon.tech
+                user: neondb_owner
+                password: npg_s6LreKOtd5IS
                 port: 5432
-                dbname: ${{ secrets.DBT_DBNAME }}
+                dbname: neondb
                 schema: ci
                 threads: 4
                 sslmode: require
           EOL
+
 
       - name: Run dbt debug
         run: dbt debug
