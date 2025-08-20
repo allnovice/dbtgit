@@ -1,0 +1,47 @@
+name: dbt Run
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  dbt-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dbt-postgres
+        run: pip install dbt-postgres
+
+      - name: Create profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml <<EOL
+          dbtprct:
+            target: ci
+            outputs:
+              ci:
+                type: postgres
+                host: ${{ secrets.DBT_HOST }}
+                user: ${{ secrets.DBT_USER }}
+                password: ${{ secrets.DBT_PASSWORD }}
+                port: 5432
+                dbname: ${{ secrets.DBT_DBNAME }}
+                schema: ci
+                threads: 4
+                sslmode: require
+          EOL
+
+      - name: Run dbt debug
+        run: dbt debug
+
+      - name: Run dbt
+        run: dbt run
