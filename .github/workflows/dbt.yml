@@ -24,22 +24,7 @@ jobs:
       - name: Create profiles.yml
         run: |
           mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml <<EOL
-          dbtprct:
-            target: ci
-            outputs:
-              ci:
-                type: postgres
-                host: ep-blue-sound-a1gig6fk-pooler.ap-southeast-1.aws.neon.tech
-                user: neondb_owner
-                password: npg_s6LreKOtd5IS
-                port: 5432
-                dbname: neondb
-                schema: ci
-                threads: 4
-                sslmode: require
-          EOL
-
+          echo "${{ secrets.DBT_PROFILES_YML }}" > ~/.dbt/profiles.yml
 
       - name: Run dbt debug
         run: dbt debug
